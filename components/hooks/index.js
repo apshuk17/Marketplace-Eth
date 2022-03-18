@@ -1,0 +1,1 @@
+export { default as useAccount } from './web3/useAccount';
