@@ -37,13 +37,11 @@ const useAccount = ({ web3, provider }) => {
   }, [provider, mutate]);
 
   return {
-    account: {
       data,
       mutate,
       isAdmin: (web3 && data && !!adminAddresses[web3.utils.keccak256(data)]) ?? false,
       ...swrResponse,
-    },
-  };
+    };
 };
 
 export default useAccount;

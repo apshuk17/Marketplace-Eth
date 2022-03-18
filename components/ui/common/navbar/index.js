@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { useWeb3 } from "@components/providers";
 import { Button } from "@components/ui/common";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 export default function Navbar() {
-  const { connect, isWeb3Loaded, isLoading, accountConnected } = useWeb3();
-  const {
-    account: { data: accountNumber, isAdmin },
-  } = accountConnected;
-  const {pathname} = useRouter();
+  const { connect, isWeb3Loaded, isLoading, accountConnected, requireInstall } =
+    useWeb3();
+  const { data: accountNumber, isAdmin } = accountConnected;
+  const { pathname } = useRouter();
 
   return (
     <section>
@@ -38,42 +37,38 @@ export default function Navbar() {
                   Company
                 </a>
               </Link>
-              {!isLoading ? (
-                isWeb3Loaded ? (
-                  accountNumber ? (
-                    <Button
-                      className="w-40 cursor-default"
-                      variant="purple"
-                      hoverable={false}
-                    >
-                      Hi there {isAdmin ? 'Admin!' : null}
-                    </Button>
-                  ) : (
-                    <Button className="w-40" variant="purple" onClick={connect}>
-                      Connect
-                    </Button>
-                  )
-                ) : (
-                  <Button
-                    className="w-40"
-                    variant="purple"
-                    onClick={() =>
-                      window.open("https://metamask.io/download.html", "_blank")
-                    }
-                  >
-                    Install Metamask
-                  </Button>
-                )
-              ) : (
+              {isLoading ? (
                 <Button className="w-40" variant="purple" disabled={true}>
                   Loading...
+                </Button>
+              ) : accountNumber ? (
+                <Button
+                  className="w-40 cursor-default"
+                  variant="purple"
+                  hoverable={false}
+                >
+                  Hi there {isAdmin ? "Admin!" : null}
+                </Button>
+              ) : requireInstall ? (
+                <Button
+                  className="w-40"
+                  variant="purple"
+                  onClick={() =>
+                    window.open("https://metamask.io/download.html", "_blank")
+                  }
+                >
+                  Install Metamask
+                </Button>
+              ) : (
+                <Button className="w-40" variant="purple" onClick={connect}>
+                  Connect
                 </Button>
               )}
             </div>
           </div>
         </nav>
       </div>
-      {accountNumber && !pathname.includes('marketplace') ? (
+      {accountNumber && !pathname.includes("marketplace") ? (
         <div className="flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
             {accountNumber}

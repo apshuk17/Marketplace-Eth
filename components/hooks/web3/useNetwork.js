@@ -8,8 +8,10 @@ const NETWORKS = {
   5: "Goerli Test Network",
   42: "Kovan Test Network",
   56: "Binance Smart Chain",
-  1337: "Ganache"
+  1337: "Ganache",
 };
+
+const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID];
 
 const useNetwork = ({ web3, provider }) => {
   const { mutate } = useSWRConfig();
@@ -30,11 +32,11 @@ const useNetwork = ({ web3, provider }) => {
   }, [provider, mutate]);
 
   return {
-    network: {
-      data,
-      mutate,
-      ...swrResponse,
-    },
+    data,
+    target: targetNetwork,
+    isSupported: data === targetNetwork,
+    mutate,
+    ...swrResponse,
   };
 };
 

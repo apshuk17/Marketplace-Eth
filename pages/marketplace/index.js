@@ -7,18 +7,25 @@ import { CourseCard } from "@components/ui/course";
 
 const Marketplace = ({ courses }) => {
   const { accountConnected, networkConnected } = useWeb3();
-  const {
-    account: { data: accountNumber },
-  } = accountConnected;
+  const { data: accountNumber } = accountConnected;
 
   const {
-    network: { data: networkName },
+    data: networkName,
+    target: targetNetwork,
+    isSupported,
+    hasInitialResponse,
   } = networkConnected;
 
   return (
     <>
       <div className="py-4">
-        <WalletBar address={accountNumber} network={networkName} />
+        <WalletBar
+          address={accountNumber}
+          network={networkName}
+          targetNetwork={targetNetwork}
+          isSupported={isSupported}
+          hasInitialResponse={hasInitialResponse}
+        />
       </div>
       <CourseList courses={courses}>
         {(course) => <CourseCard key={course.id} course={course} />}

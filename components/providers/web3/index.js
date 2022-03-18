@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
 import { useAccount, useNetwork } from "@components/hooks";
+import { enhanceHook } from "@components/hooks";
 
 const Web3Context = createContext(null);
 
@@ -13,15 +14,19 @@ const Web3Provider = ({ children }) => {
     isLoading: true,
   });
 
-  const accountConnected = useAccount({
-    web3: web3Api.web3,
-    provider: web3Api.provider,
-  });
+  const accountConnected = enhanceHook(
+    useAccount({
+      web3: web3Api.web3,
+      provider: web3Api.provider,
+    })
+  );
 
-  const networkConnected = useNetwork({
-    web3: web3Api.web3,
-    provider: web3Api.provider,
-  });
+  const networkConnected = enhanceHook(
+    useNetwork({
+      web3: web3Api.web3,
+      provider: web3Api.provider,
+    })
+  );
 
   // load provider
   useEffect(() => {
@@ -43,10 +48,11 @@ const Web3Provider = ({ children }) => {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3, provider } = web3Api;
+    const { web3, provider, isLoading } = web3Api;
     return {
       ...web3Api,
       isWeb3Loaded: !!web3,
+      requireInstall: !isLoading && !web3,
       accountConnected,
       networkConnected,
       connect: web3
@@ -70,11 +76,6 @@ const Web3Provider = ({ children }) => {
 
 export const useWeb3 = () => {
   return useContext(Web3Context);
-};
-
-export const useHooks = (cb, web3) => {
-  const hooks = useSetupHooks(web3);
-  return cb(hooks);
 };
 
 export default Web3Provider;
