@@ -4,7 +4,7 @@ import { Button } from "@components/ui/common";
 import { useRouter } from "next/router";
 
 export default function Navbar() {
-  const { connect, isWeb3Loaded, isLoading, accountConnected, requireInstall } =
+  const { connect, isLoading, accountConnected, requireInstall } =
     useWeb3();
   const { data: accountNumber, isAdmin } = accountConnected;
   const { pathname } = useRouter();

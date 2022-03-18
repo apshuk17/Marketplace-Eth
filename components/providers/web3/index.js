@@ -51,7 +51,6 @@ const Web3Provider = ({ children }) => {
     const { web3, provider, isLoading } = web3Api;
     return {
       ...web3Api,
-      isWeb3Loaded: !!web3,
       requireInstall: !isLoading && !web3,
       accountConnected,
       networkConnected,
