@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3";
-import { useAccount } from "@components/hooks";
+import { useAccount, useNetwork } from "@components/hooks";
 
 const Web3Context = createContext(null);
 
@@ -14,6 +14,11 @@ const Web3Provider = ({ children }) => {
   });
 
   const accountConnected = useAccount({
+    web3: web3Api.web3,
+    provider: web3Api.provider,
+  });
+
+  const networkConnected = useNetwork({
     web3: web3Api.web3,
     provider: web3Api.provider,
   });
@@ -43,6 +48,7 @@ const Web3Provider = ({ children }) => {
       ...web3Api,
       isWeb3Loaded: !!web3,
       accountConnected,
+      networkConnected,
       connect: web3
         ? async () => {
             try {
@@ -55,7 +61,7 @@ const Web3Provider = ({ children }) => {
           }
         : () => console.log("Cannot connect to Metamask!"),
     };
-  }, [web3Api, accountConnected]);
+  }, [web3Api, accountConnected, networkConnected]);
 
   return (
     <Web3Context.Provider value={_web3Api}>{children}</Web3Context.Provider>

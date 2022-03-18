@@ -5,6 +5,7 @@ const adminAddresses = {
   "0xadb80a74270affa4992cfb94fdc320e08ac26529751fda5481ab933fd8fc39ed": true,
 };
 
+
 const useAccount = ({ web3, provider }) => {
   // const [account, setAccount] = useState(null);
   const { mutate } = useSWRConfig();
@@ -27,8 +28,9 @@ const useAccount = ({ web3, provider }) => {
   // }, [web3]);
 
   useEffect(() => {
+    /* The value of provider for the metamask is window.ethereum **/
     if (provider) {
-      provider.on("accountsChanged", (accounts) => {
+      provider.on("accountsChanged", () => {
         mutate("web3/accounts");
       });
     }
