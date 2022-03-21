@@ -6,3 +6,7 @@
   min-height: calc(100vh - 88px);
 }
 
+.next-image-wrapper > *:first-of-type {
+  min-height: 100%;
+}
+
