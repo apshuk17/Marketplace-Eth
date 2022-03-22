@@ -1,17 +1,19 @@
+import { useWalletInfo } from "@components/hooks";
 import { useWeb3 } from "@components/providers";
 
-export default function WalletBar({
-  address,
-  network,
-  targetNetwork,
-  isSupported,
-  hasInitialResponse,
-}) {
+export default function WalletBar() {
   const { requireInstall } = useWeb3();
+  const {
+    accountNumber,
+    networkName,
+    targetNetwork,
+    isSupported,
+    hasInitialResponse,
+  } = useWalletInfo();
   return (
     <section className="text-white bg-indigo-600 rounded-lg">
       <div className="p-8">
-        <h1 className="text-2xl">Hello, {address}</h1>
+        <h1 className="text-2xl">Hello, {accountNumber}</h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
         </h2>
@@ -41,10 +43,10 @@ export default function WalletBar({
                 Cannot connect to network. Please install Metamask.
               </div>
             ) : null}
-            {network ? (
+            {networkName ? (
               <div>
                 <span>Currently on </span>
-                <strong className="text-2xl">{network}</strong>
+                <strong className="text-2xl">{networkName}</strong>
               </div>
             ) : null}
           </div>
