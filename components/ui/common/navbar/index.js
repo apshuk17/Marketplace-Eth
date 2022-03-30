@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { useWeb3 } from "@components/providers";
-import { Button } from "@components/ui/common";
+import { Button, ActiveLink } from "@components/ui/common";
 import { useRouter } from "next/router";
 
 export default function Navbar() {
@@ -15,28 +14,28 @@ export default function Navbar() {
         <nav className="relative" aria-label="Global">
           <div className="flex justify-between items-center">
             <div>
-              <Link href="/">
+              <ActiveLink href="/" activeLinkClass="text-yellow-600">
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Home
                 </a>
-              </Link>
-              <Link href="/marketplace">
+              </ActiveLink>
+              <ActiveLink href="/marketplace">
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Marketplace
                 </a>
-              </Link>
-              <Link href="/">
+              </ActiveLink>
+              <ActiveLink href="/blogs">
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Blogs
                 </a>
-              </Link>
+              </ActiveLink>
             </div>
             <div>
-              <Link href="/">
+              <ActiveLink href="/company">
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Company
                 </a>
-              </Link>
+              </ActiveLink>
               {isLoading ? (
                 <Button className="w-40" variant="purple" disabled={true}>
                   Loading...

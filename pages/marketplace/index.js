@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { BaseLayout } from "@components/ui/layout";
 import { CourseList } from "@components/ui/course";
@@ -11,6 +12,11 @@ import { MarketplaceHeader } from "@components/marketplace";
 const Marketplace = ({ courses }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const { canPurchaseCourse } = useWalletInfo();
+  console.log('##Marketplace');
+
+  const purchasedCourse = order => {
+    alert(JSON.stringify(order));
+  }
 
   return (
     <>
@@ -40,6 +46,7 @@ const Marketplace = ({ courses }) => {
       {!!selectedCourse ? (
         <OrderModal
           course={selectedCourse}
+          onSubmit={purchasedCourse}
           onClose={() => setSelectedCourse(null)}
         />
       ) : null}

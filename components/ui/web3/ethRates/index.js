@@ -5,6 +5,7 @@ export default function EthRates() {
   const {
     eth: { data, pricePerItem },
   } = useEthPrice();
+
   return (
     <div className="grid grid-cols-4">
       <div className="flex flex-1 items-stretch text-center">

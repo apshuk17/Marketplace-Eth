@@ -1,24 +1,69 @@
-import { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Button, Modal } from "@components/ui/common";
+import { useRefreshedEthPrice } from "@components/hooks";
 
-const OrderModal = ({ course, onClose }) => {
+const defaultOrder = {
+  price: "",
+  email: "",
+  confirmationEmail: "",
+};
+
+const _createFormState = (isDisabled = false, message = "") => ({
+  isDisabled,
+  message,
+});
+
+const createFormState = ({ price, email, confirmationEmail }, hasAgreedTOS) => {
+  if (!price || Number(price) <= 0) {
+    return _createFormState(true, "Price is not valid!");
+  } else if (email.length === 0 || confirmationEmail.length === 0) {
+    return _createFormState(true);
+  } else if (email !== confirmationEmail) {
+    return _createFormState(true, "Emails are not matching!");
+  } else if (!hasAgreedTOS) {
+    return _createFormState(
+      true,
+      "You need to agree with terms of service in order to submit the form"
+    );
+  }
+
+  return _createFormState();
+};
+
+const OrderModal = ({ course, onClose, onSubmit }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [order, setOrder] = useState(defaultOrder);
+  const [enablePrice, setEnablePrice] = useState(false);
+  const [hasAgreedTOS, setHasAgreedTOS] = useState(false);
+  const { eth } = useRefreshedEthPrice();
 
   useEffect(() => {
-    if (!!course) setIsOpen(true);
-  }, [course]);
+    if (!!course) {
+      setIsOpen(true);
+      setOrder((prevOrder) => ({ ...prevOrder, price: eth.pricePerItem }));
+    }
+  }, [course, eth.pricePerItem]);
 
   const closeModal = () => {
     setIsOpen(false);
+    setOrder(defaultOrder);
+    setEnablePrice(false);
+    setHasAgreedTOS(false);
     onClose();
-  }
+  };
+
+  const formState = useMemo(
+    () => createFormState(order, hasAgreedTOS),
+    [order, hasAgreedTOS]
+  );
 
   return (
     <Modal isOpen={isOpen}>
       <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
         <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
           <div className="sm:flex sm:items-start">
-            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+            <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
               <h3
                 className="mb-7 text-lg font-bold leading-6 text-gray-900"
                 id="modal-title"
@@ -30,7 +75,18 @@ const OrderModal = ({ course, onClose }) => {
                   <label className="mb-2 font-bold">Price(eth)</label>
                   <div className="text-xs text-gray-700 flex">
                     <label className="flex items-center mr-2">
-                      <input type="checkbox" className="form-checkbox" />
+                      <input
+                        checked={enablePrice}
+                        onChange={({ target: { checked } }) => {
+                          setOrder((prevOrder) => ({
+                            ...prevOrder,
+                            price: checked ? prevOrder.price : eth.pricePerItem,
+                          }));
+                          setEnablePrice(checked);
+                        }}
+                        type="checkbox"
+                        className="form-checkbox"
+                      />
                     </label>
                     <span>
                       Adjust Price - only when the price is not correct
@@ -39,6 +95,12 @@ const OrderModal = ({ course, onClose }) => {
                 </div>
                 <input
                   type="text"
+                  disabled={!enablePrice}
+                  value={order.price}
+                  onChange={({ target: { value } }) => {
+                    if (isNaN(value)) return;
+                    setOrder((prevOrder) => ({ ...prevOrder, price: value }));
+                  }}
                   name="price"
                   id="price"
                   className="disabled:opacity-50 w-80 mb-1 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
@@ -55,8 +117,15 @@ const OrderModal = ({ course, onClose }) => {
                 </div>
                 <input
                   type="email"
+                  value={order.email}
                   name="email"
                   id="email"
+                  onChange={({ target: { value } }) => {
+                    setOrder((prevOrder) => ({
+                      ...prevOrder,
+                      email: value.trim(),
+                    }));
+                  }}
                   className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                   placeholder="x@y.com"
                 />
@@ -72,15 +141,29 @@ const OrderModal = ({ course, onClose }) => {
                 </div>
                 <input
                   type="email"
+                  value={order.confirmationEmail}
                   name="confirmationEmail"
                   id="confirmationEmail"
+                  onChange={({ target: { value } }) => {
+                    setOrder((prevOrder) => ({
+                      ...prevOrder,
+                      confirmationEmail: value.trim(),
+                    }));
+                  }}
                   className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
                   placeholder="x@y.com"
                 />
               </div>
               <div className="text-xs text-gray-700 flex">
                 <label className="flex items-center mr-2">
-                  <input type="checkbox" className="form-checkbox" />
+                  <input
+                    checked={hasAgreedTOS}
+                    onChange={({ target: { checked } }) => {
+                      setHasAgreedTOS(checked);
+                    }}
+                    type="checkbox"
+                    className="form-checkbox"
+                  />
                 </label>
                 <span>
                   I accept Eincode &apos;terms of service&apos; and I agree that
@@ -88,12 +171,24 @@ const OrderModal = ({ course, onClose }) => {
                   not correct
                 </span>
               </div>
+              {formState.message ? (
+                <div className="p-4 my-3 text-red-700 bg-red-200 rounded-lg text-sm">
+                  {formState.message}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
         <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
-          <Button>Submit</Button>
-          <Button onClick={closeModal} variant="red">Cancel</Button>
+          <Button
+            disabled={formState.isDisabled}
+            onClick={() => onSubmit(order)}
+          >
+            Submit
+          </Button>
+          <Button onClick={closeModal} variant="red">
+            Cancel
+          </Button>
         </div>
       </div>
     </Modal>

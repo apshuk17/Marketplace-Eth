@@ -7,7 +7,6 @@ const adminAddresses = {
 
 
 const useAccount = ({ web3, provider }) => {
-  // const [account, setAccount] = useState(null);
   const { mutate } = useSWRConfig();
   const { data, ...swrResponse } = useSWR(
     web3 ? "web3/accounts" : null,
@@ -16,16 +15,6 @@ const useAccount = ({ web3, provider }) => {
       return accounts[0] ?? null;
     }
   );
-
-  // console.log('##swrData', swrResponse.data);
-
-  // useEffect(() => {
-  //     const getAccount = async () => {
-  //         const accounts = await web3.eth.getAccounts();
-  //         if (accounts.length) setAccount(accounts[0])
-  //     }
-  //     if (web3) getAccount();
-  // }, [web3]);
 
   useEffect(() => {
     /* The value of provider for the metamask is window.ethereum **/
