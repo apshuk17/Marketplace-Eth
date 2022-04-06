@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { useEthPrice } from "@components/hooks";
+import { useEthPrice, COURSE_PRICE } from "@components/hooks";
+import { Loader } from "@components/ui/common";
 
 export default function EthRates() {
   const {
@@ -7,37 +8,49 @@ export default function EthRates() {
   } = useEthPrice();
 
   return (
-    <div className="grid grid-cols-4">
-      <div className="flex flex-1 items-stretch text-center">
-        <div className="p-10 border drop-shadow rounded-md">
-          <div className="flex items-center">
-            <Image
-              layout="fixed"
-              height={35}
-              width={35}
-              src="/small-eth.webp"
-              alt="small-eth"
-            />
-            <span className="text-2xl font-bold">= {data}$</span>
-          </div>
-          <p className="text-xl text-gray-500">Current eth Price</p>
+    <div className="flex flex-col xs:flex-row text-center">
+      <div className="p-6 border drop-shadow rounded-md mr-2">
+        <div className="flex items-center justify-center">
+          {data ? (
+            <>
+              <Image
+                layout="fixed"
+                height="35"
+                width="35"
+                src="/small-eth.webp"
+                alt="loader"
+              />
+              <span className="text-xl font-bold">= {data}$</span>
+            </>
+          ) : (
+            <div className="w-full flex justify-center">
+              <Loader size="md" />
+            </div>
+          )}
         </div>
+        <p className="text-lg text-gray-500">Current eth Price</p>
       </div>
-      <div className="flex flex-1 items-stretch text-center">
-        <div className="p-10 border drop-shadow rounded-md">
-          <div className="flex items-center">
-            <span className="text-2xl font-bold">{pricePerItem}</span>
-            <Image
-              layout="fixed"
-              height={35}
-              width={35}
-              src="/small-eth.webp"
-              alt="small-eth"
-            />
-            <span className="text-2xl font-bold">= 15$</span>
-          </div>
-          <p className="text-xl text-gray-500">Price per course</p>
+      <div className="p-6 border drop-shadow rounded-md">
+        <div className="flex items-center justify-center">
+          {data ? (
+            <>
+              <span className="text-xl font-bold">{pricePerItem}</span>
+              <Image
+                layout="fixed"
+                height="35"
+                width="35"
+                src="/small-eth.webp"
+                alt="loader"
+              />
+              <span className="text-xl font-bold">= {COURSE_PRICE}$</span>
+            </>
+          ) : (
+            <div className="w-full flex justify-center">
+              <Loader size="md" />
+            </div>
+          )}
         </div>
+        <p className="text-lg text-gray-500">Price per course</p>
       </div>
     </div>
   );

@@ -3,8 +3,7 @@ import { Button, ActiveLink } from "@components/ui/common";
 import { useRouter } from "next/router";
 
 export default function Navbar() {
-  const { connect, isLoading, accountConnected, requireInstall } =
-    useWeb3();
+  const { connect, isLoading, accountConnected, requireInstall } = useWeb3();
   const { data: accountNumber, isAdmin } = accountConnected;
   const { pathname } = useRouter();
 
@@ -12,7 +11,7 @@ export default function Navbar() {
     <section>
       <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
         <nav className="relative" aria-label="Global">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col xs:flex-row justify-between items-center">
             <div>
               <ActiveLink href="/" activeLinkClass="text-yellow-600">
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
@@ -30,10 +29,10 @@ export default function Navbar() {
                 </a>
               </ActiveLink>
             </div>
-            <div>
-              <ActiveLink href="/company">
-                <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
-                  Company
+            <div className="text-center">
+              <ActiveLink href="/wishlist">
+                <a className="font-medium sm:mr-8 mr-1 text-gray-500 hover:text-gray-900">
+                  Wishlist
                 </a>
               </ActiveLink>
               {isLoading ? (

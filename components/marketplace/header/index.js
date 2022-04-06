@@ -19,12 +19,14 @@ const LINKS = [
 const Header = () => {
   return (
     <>
+    <div className="pt-4">
       <WalletBar />
-      <EthRates />
-      <div className="flex flex-row-reverse pb-4 px-4 sm:px-6 lg:px-8">
-        <Breadcrumbs items={LINKS} />
-      </div>
-    </>
+    </div>
+    <EthRates />
+    <div className="flex flex-row-reverse p-4 sm:px-6 lg:px-8">
+      <Breadcrumbs items={LINKS} />
+    </div>
+  </>
   );
 };
 

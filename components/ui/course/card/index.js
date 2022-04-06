@@ -7,7 +7,7 @@ export default function Card({ course, Footer, disabled }) {
       <div className="flex h-full">
         <div className="flex-1 h-full next-image-wrapper">
           <Image
-            className={`object-cover ${disabled ? 'filter grayscale' : ''}`}
+            className={`object-cover ${disabled ? "filter grayscale" : ""}`}
             layout="responsive"
             width={200}
             height={230}
@@ -20,11 +20,13 @@ export default function Card({ course, Footer, disabled }) {
             {course.type}
           </div>
           <Link href={`/courses/${course.slug}`}>
-            <a className="h-12 block mt-1 text-lg leading-tight font-medium text-black hover:underline">
+            <a className="h-12 block mt-1 text-sm sm:text-lg leading-tight font-medium text-black hover:underline">
               {course.title}
             </a>
           </Link>
-          <p className="mt-2 text-gray-500">{course.description.substring(0, 70)}...</p>
+          <p className="mt-2 text-sm sm:text-base text-gray-500">
+            {course.description.substring(0, 70)}...
+          </p>
           {Footer && <Footer />}
         </div>
       </div>
