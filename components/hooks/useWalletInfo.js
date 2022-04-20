@@ -2,7 +2,7 @@ import { useWeb3 } from "@components/providers";
 
 const useWalletInfo = () => {
   const { accountConnected, networkConnected } = useWeb3();
-  const { data: accountNumber, isEmpty: isAccountEmpty } = accountConnected;
+  const { data: accountNumber, isEmpty: isAccountEmpty, isAdmin } = accountConnected;
   const {
     data: networkName,
     target: targetNetwork,
@@ -19,7 +19,8 @@ const useWalletInfo = () => {
       isSupported,
       hasInitialResponse,
       canPurchaseCourse,
-      isAccountEmpty
+      isAccountEmpty,
+      isAdmin
   }
 
 };

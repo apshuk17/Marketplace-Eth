@@ -20,11 +20,17 @@ contract CourseMarketplace {
     // mapping of course hash to course details
     mapping(bytes32 => Course) private _ownedCourses;
 
-    // mapping of course id to course hash
+    // mapping of index to course hash
     mapping(uint => bytes32) private _ownedCourseHash;
 
     // number of all courses + id of the course
     uint private _totalOwnedCourses;
+
+    /// Invalid Course State
+    error InvalidState();
+
+    /// Course Is Not Created
+    error CourseIsNotCreated();
 
     /// Course has already an owner!
     error CourseHasOwner();
@@ -60,6 +66,23 @@ contract CourseMarketplace {
             owner: msg.sender,
             state: State.Purchased
         });
+    }
+
+    function isCourseCreated(bytes32 courseHash) private view returns (bool) {
+        return _ownedCourses[courseHash].owner != address(0);
+    }
+
+    function activateCourse(bytes32 courseHash) external onlyOwner{
+        if (!isCourseCreated(courseHash)) {
+            revert CourseIsNotCreated();
+        }
+        Course storage course = _ownedCourses[courseHash];
+
+        if (course.state != State.Purchased) {
+            revert InvalidState();
+        }
+
+        course.state = State.Activated;
     }
 
     function getCourseCount() external view returns(uint) {

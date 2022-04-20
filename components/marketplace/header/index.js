@@ -4,19 +4,22 @@ import { EthRates, WalletBar } from "@components/ui/web3";
 const LINKS = [
     {
         href: '/marketplace',
-        value: 'Buy'
+        value: 'Buy',
+        requireAdmin: false
     },
     {
         href: '/marketplace/courses/owned',
-        value: 'My Courses'
+        value: 'My Courses',
+        requireAdmin: false
     },
     {
-        href: '/marketplace/courses/manage',
-        value: 'Main Courses'
+        href: '/marketplace/courses/managed',
+        value: 'Manage Courses',
+        requireAdmin: true
     }
 ];
 
-const Header = () => {
+const Header = ({ isAdmin }) => {
   return (
     <>
     <div className="pt-4">
@@ -24,7 +27,7 @@ const Header = () => {
     </div>
     <EthRates />
     <div className="flex flex-row-reverse p-4 sm:px-6 lg:px-8">
-      <Breadcrumbs items={LINKS} />
+      <Breadcrumbs isAdmin={isAdmin} items={LINKS} />
     </div>
   </>
   );

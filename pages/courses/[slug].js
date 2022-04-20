@@ -6,7 +6,7 @@ import { BaseLayout } from "@components/ui/layout";
 import { getAllCourses } from "@content/courses/fetcher";
 export default function Course({ course }) {
   const { accountNumber } = useWalletInfo();
-  const { contract, web3 } = useWeb3();
+  const { contract, web3, isLoading } = useWeb3();
   const { data: ownedCourse } = enhanceHook(
     useOwnedCourse({
       course,
@@ -17,7 +17,10 @@ export default function Course({ course }) {
   );
 
   const courseState = ownedCourse?.state;
-  const isLocked = courseState === "purchased" || courseState === "deactivated";
+  const isLocked =
+    !courseState ||
+    courseState === "purchased" ||
+    courseState === "deactivated";
 
   return (
     <>
@@ -51,7 +54,7 @@ export default function Course({ course }) {
           </Message>
         ) : null}
       </div>
-      <Curriculum locked={isLocked} courseState={courseState} />
+      <Curriculum isLoading={isLoading} locked={isLocked} courseState={courseState} />
       <Modal />
     </>
   );

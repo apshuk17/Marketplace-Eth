@@ -19,16 +19,18 @@ const useNetwork = ({ web3, provider }) => {
     web3 ? "web3/network" : null,
     async () => {
       const chainId = await web3.eth.getChainId();
+
+      if (!chainId) {
+        throw new Error("Cannot retrieve a network.");
+      }
+
       return NETWORKS[chainId];
     }
   );
 
   useEffect(() => {
-    if (provider) {
-      provider.on("chainChanged", () => {
-        mutate("web3/network");
-      });
-    }
+    const mutator = () => mutate("web3/network");
+    provider?.on("chainChanged", mutator);
   }, [provider, mutate]);
 
   return {

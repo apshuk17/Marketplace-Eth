@@ -10,7 +10,7 @@ import { MarketplaceHeader } from "@components/marketplace";
 import { useWeb3 } from "@components/providers";
 
 const Marketplace = ({ courses }) => {
-  const { web3, contract } = useWeb3();
+  const { web3, contract, accountConnected: { isAdmin } } = useWeb3();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const { canPurchaseCourse, accountNumber } = useWalletInfo();
 
@@ -37,7 +37,6 @@ const Marketplace = ({ courses }) => {
       const result = await contract.methods
         .purchaseCourse(hexCourseId, proof)
         .send({ from: accountNumber, value });
-      console.log("##result", result);
     } catch {
       console.error("Purchase Course: Operation has failed");
     }
@@ -45,7 +44,7 @@ const Marketplace = ({ courses }) => {
 
   return (
     <>
-      <MarketplaceHeader />
+      <MarketplaceHeader isAdmin={isAdmin} />
       <CourseList courses={courses}>
         {(course) => (
           <CourseCard
